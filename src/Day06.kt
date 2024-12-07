@@ -40,9 +40,6 @@ fun main() {
                 else -> throw IllegalStateException()
             }
         } else {
-            if (nextPosition == position){
-                throw IllegalStateException("Circular path")
-            }
             position = nextPosition
         }
 
