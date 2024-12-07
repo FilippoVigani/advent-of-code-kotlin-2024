@@ -9,7 +9,7 @@ fun main() {
 
     var total = 0L
     expressions.forEach {
-        if (eligible(it.result, it.values)){
+        if (eligible(it.result, it.values)) {
             total += it.result
         }
     }
@@ -18,18 +18,24 @@ fun main() {
 
 }
 
-fun eligible(result: Long, values: List<Long>): Boolean{
-    if (values.size == 1){
+fun eligible(result: Long, values: List<Long>): Boolean {
+    if (result < 0L) return false
+    if (values.size == 1) {
         return result == values.first()
     }
     val lastValue = values.last()
     val remaining = values.dropLast(1)
 
-   return  if (result % lastValue == 0L){
-        eligible(result - lastValue, remaining) || eligible(result / lastValue, remaining)
-    } else {
-        eligible(result - lastValue, remaining)
-    }
+    val concatenable = result.toString().endsWith(lastValue.toString()) && result != lastValue
+    val divisible = result % lastValue == 0L
+
+    return eligible(result - lastValue, remaining) ||
+            concatenable && eligible(
+        result = (result.toString().dropLast(lastValue.toString().length)).toLong(),
+        values = remaining,
+    ) ||
+            divisible && eligible(result / lastValue, remaining)
+
 }
 
 data class Expression(
